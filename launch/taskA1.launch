@@ -5,7 +5,7 @@
 	<arg name="publish_tf" default="true"/>
 	<arg name="rviz" default="true"/>
     <arg name="is_record" default="true"/>
-    <arg name="launch_camera" default="true"/>
+    <arg name="launch_camera" default="false"/>
     <arg name="video_device" default="/dev/video0"/>
     <arg name="tag" default="38"/>
     <arg name="task" default="1"/>
