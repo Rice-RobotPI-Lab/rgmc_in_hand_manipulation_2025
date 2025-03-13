@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<launch>
+
+	<arg name="camera_name" default="usb_cam"/>
+	<arg name="publish_tf" default="true"/>
+	<arg name="rviz" default="true"/>
+    <arg name="is_record" default="false"/>
+    <arg name="launch_camera" default="true"/>
+    <arg name="video_device" default="/dev/video0"/>
+    <arg name="task" default="2"/>
+    <arg name="prefix" default="team_name_"/>
+    <arg name="cube_file" default="$(find rgmc_in_hand_manipulation_2025)/config/tags_cube.yaml"/>
+    <arg name="tags_file" default="$(find rgmc_in_hand_manipulation_2025)/config/tags_taskB.yaml"/>
+    <arg name="task_file" default="taskB2.yaml"/>
+
+	<!-- set up cameras -->
+    <node name="$(arg camera_name)" pkg="usb_cam" type="usb_cam_node" output="screen" if="$(arg launch_camera)">
+        <param name="video_device" value="$(arg video_device)"/>
+        <param name="image_width" value="1920"/>
+        <param name="image_height" value="1080"/>
+        <param name="pixel_format" value="mjpeg"/>
+        <param name="framerate" value="30"/>
+        <param name="camera_frame_id" value="$(arg camera_name)"/>
+        <param name="camera_name" value="$(arg camera_name)"/>
+        <param name="camera_info_url" value="file://$(find rgmc_in_hand_manipulation_2025)/config/camera_info/$(arg camera_name)_1080p.yaml"/>
+    </node>
+
+	<!-- set up apriltag detectors -->
+    <include file="$(find rgmc_in_hand_manipulation_2025)/launch/continuous_detection.launch" if="$(arg launch_camera)">
+        <arg name="camera_name" value="$(arg camera_name)"/>
+        <arg name="camera_frame" value="$(arg camera_name)"/>
+        <arg name="publish_tf" value="$(arg publish_tf)"/>
+        <arg name="tags_file" value="$(arg tags_file)"/>
+    </include>
+
+    <!-- set up recorder -->
+    <node name="task_recorder" pkg="rgmc_in_hand_manipulation_2025" type="task_recorder.py" if="$(arg is_record)">
+        <param name="video_width" value="1920"/>
+        <param name="video_height" value="1080"/>
+        <param name="frame_rate" value="30"/>
+        <param name="camera_topic" value="/$(arg camera_name)/image_raw"/>
+        <param name="prefix" value="$(arg prefix)"/>
+    </node>
+
+    <!-- set up task assignment and evaluation -->
+    <node name="task_evalB" pkg="rgmc_in_hand_manipulation_2025" type="task_evalB.py" output="screen">
+        <param name="task" value="$(arg task)"/>
+        <param name="cube_file" value="$(arg cube_file)"/>
+        <param name="task_file" value="$(find rgmc_in_hand_manipulation_2025)/task/$(arg task_file)"/>
+        <param name="is_record" value="$(arg is_record)"/>
+    </node>
+	
+	<node name="rviz" pkg="rviz" type="rviz" if="$(arg rviz)" args="-d $(find rgmc_in_hand_manipulation_2025)/rviz/evalB.rviz"/>
+
+</launch>
