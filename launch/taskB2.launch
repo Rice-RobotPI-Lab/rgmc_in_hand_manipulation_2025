@@ -4,7 +4,7 @@
 	<arg name="camera_name" default="usb_cam"/>
 	<arg name="publish_tf" default="true"/>
 	<arg name="rviz" default="true"/>
-    <arg name="is_record" default="false"/>
+    <arg name="is_record" default="true"/>
     <arg name="launch_camera" default="true"/>
     <arg name="video_device" default="/dev/video0"/>
     <arg name="task" default="2"/>
