@@ -134,6 +134,6 @@ Topic | Type | Description
 ### Services
 Topic | Type | Description
 ------|------|-------------
-`/rgmc_eval/start`|[std_srvs/Trigger](http://docs.ros.org/en/melodic/api/std_srvs/html/srv/Trigger.html)| Start the task and the timer. For task A, also set the initial position for trajectory tracing.
+`/rgmc_eval/start`|[std_srvs/Trigger](http://docs.ros.org/en/melodic/api/std_srvs/html/srv/Trigger.html)| Start the task and the timer. For task A1 and task A2, also set the initial position for trajectory tracing.
 `/rgmc_eval/record`|[std_srvs/Trigger](http://docs.ros.org/en/melodic/api/std_srvs/html/srv/Trigger.html)| Record the position/orientation for scoring for the current waypoint and move on to the next one.
 `/rgmc_eval/stop`|[std_srvs/Trigger](http://docs.ros.org/en/melodic/api/std_srvs/html/srv/Trigger.html)| Stop the current task
