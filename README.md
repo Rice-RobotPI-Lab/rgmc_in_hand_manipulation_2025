@@ -5,7 +5,7 @@
 
 
 This ROS package provides the auto-evaluator for the in-hand manipulation competition in the 10th Robotic Grasping and Manipulation Competition (RGMC)
-during IEEE-RAS International Conference on Robotics and Automation (ICRA) at Atlanta, USA, May 19-23, 2025.
+during IEEE-RAS International Conference on Robotics and Automation (ICRA) in Atlanta, USA, May 19-23, 2025.
 
 This auto-evaluator can help the participating teams to develop their solutions for the competition. During the competition, all teams will be scored and ranked using this auto-evaluator as well.
 
@@ -61,19 +61,17 @@ If you choose to use the small cube, you can only attach one apriltag on each fa
 
 
 ### Task A: Object Position Control for Waypoints Tracking
-To start task A run
+To start task A1, run:
 ```
     roslaunch rgmc_in_hand_manipulation_2025 taskA1.launch
 ```
-or 
+or start task A2 by running:
 ```
     roslaunch rgmc_in_hand_manipulation_2025 taskA2.launch
 ```
 Once the operator has initialized the grasp and approved the selected object's initial position, call the ROS service `/rgmc_eval/start` to start the auto-evaluator and set the initial object position. 
 The current goal waypoint, relative to the initial position, will be broadcasted to the topic `/rgmc_eval/taskA/goal` at 0.1-second intervals. 
 Once you are done with a goal waypoint, the performance with respect to the current goal waypoint is evaluated by calling the ROS service `/rgmc_eval/record`, which will also trigger the auto-evaluator to publish the next goal waypoint.
-Otherwise, if the time limit of 20 seconds per goal waypoint is reached, the auto-evaluator will automatically record the result and move to the next waypoint.
-The auto-evaluator will accumulate the error of every goal waypoint into the overall distance error.
 
 The waypoints are all limited within the range of <b>\[-2.5cm, 2.5cm\] \* \[-2.5cm, 2.5cm\] \* \[-2.5cm, 2.5cm\]</b> centered at the intial position of the grasped object. An example list of waypoints is provided in `rgmc_in_hand_manipulation_2025/task/taskA1.yaml` and `rgmc_in_hand_manipulation_2025/task/taskA2.yaml`. The goal waypoints can be alternatively specified by different files in `rgmc_in_hand_manipulation_2025/task` by setting the roslaunch argument, for example:
 ```
@@ -81,21 +79,24 @@ The waypoints are all limited within the range of <b>\[-2.5cm, 2.5cm\] \* \[-2.5
 ```
 
 ### Task B: Object Re-orientation
-To start task B run
+To start task B1, run:
 ```
     roslaunch rgmc_in_hand_manipulation_2025 taskB1.launch
 ```
-or 
+or start task B2 by running:
 ```
     roslaunch rgmc_in_hand_manipulation_2025 taskB2.launch
 ```
-Once the operator has initialized and stabilized the grasp, call the ROS service `/rgmc_eval/start` to start the task. The current goal facet is broadcasted to the topic `/rgmc_eval/taskB/goal` at 0.1-second intervals. Once you are done with a goal facet, the performance with respect to the current goal facet is evaluated by calling the ROS service `/rgmc_eval/record`, which will also trigger the auto-evaluator to publish the next goal facet. Otherwise, if the time limit of 30 seconds is reached, the auto-evaluator will automatically record the result and move to the next target facet. If the orientation of the cube's goal facet is within 0.5 rad facing the camera, it will count as a success. The total number of successfully reached goal facets will be recorded. The list of goal facets is specified by a file in `rgmc_in_hand_manipulation_2025/task` by setting the roslaunch argument, for example:
+Once the operator has initialized and stabilized the grasp, call the ROS service `/rgmc_eval/start` to start the task. The current goal facet is broadcasted to the topic `/rgmc_eval/taskB/goal` at 0.1-second intervals. Once you are done with a goal facet, the performance with respect to the current goal facet is evaluated by calling the ROS service `/rgmc_eval/record`, which will also trigger the auto-evaluator to publish the next goal facet. If the orientation of the cube's goal facet is within 0.5 rad facing the camera, it will count as a success. The list of goal facets is specified by a file in `rgmc_in_hand_manipulation_2025/task` by setting the roslaunch argument, for example:
 ```
     roslaunch rgmc_in_hand_manipulation_2025 taskB2.launch task_file:=taskB.yaml
 ```
 
 
 > :warning: **For both Task A and Task B, please pay attention to the stdout printed by the auto-evaluator to see what metrics are evaluated.**
+
+### Recorder
+The recorded files will be save in `rgmc_in_hand_manipulation_2025/records`
 
 ### real-eval
 `real-eval` is a branch under this repository that will be used by the judges and teams during the competition. At the competition, the judges will bring their own computers to run the evaluator, and the teams will run all their code on their own computers that are on the **same ROS network** with the judges computers.
