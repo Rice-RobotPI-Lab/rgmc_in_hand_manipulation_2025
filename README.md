@@ -96,7 +96,7 @@ Once the operator has initialized and stabilized the grasp, call the ROS service
 > :warning: **For both Task A and Task B, please pay attention to the stdout printed by the auto-evaluator to see what metrics are evaluated.**
 
 ### Recorder
-The recorded files will be save in `rgmc_in_hand_manipulation_2025/records`
+By default, both the `main` and `real-eval` branches are configured to record the input video and console output during each run. The recorded files are saved in the `rgmc_in_hand_manipulation_2025/records` directory. You can customize the filename prefix using the prefix argument, for example: `prefix:=team_name_`. During development, if you wish to disable the recording feature, you can set the argument `is_record:=False` in any of the launch files.
 
 ### real-eval
 `real-eval` is a branch under this repository that will be used by the judges and teams during the competition. At the competition, the judges will bring their own computers to run the evaluator, and the teams will run all their code on their own computers that are on the **same ROS network** with the judges computers.
