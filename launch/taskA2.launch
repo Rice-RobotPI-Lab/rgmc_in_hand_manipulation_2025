@@ -35,8 +35,8 @@
 
     <!-- set up recorder -->
     <node name="task_recorder" pkg="rgmc_in_hand_manipulation_2025" type="task_recorder.py" if="$(arg is_record)">
-        <param name="video_width" value="1920"/>
-        <param name="video_height" value="1080"/>
+        <param name="video_width" value="1080"/>
+        <param name="video_height" value="720"/>
         <param name="frame_rate" value="30"/>
         <param name="camera_topic" value="/$(arg camera_name)/image_raw"/>
         <param name="prefix" value="$(arg prefix)"/>

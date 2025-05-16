@@ -48,7 +48,9 @@ class TaskRecorder(object):
         if self.recording:
             try:
                 cv_image = self.cvb.imgmsg_to_cv2(msg, "bgr8")
-                self.buffer.append(cv_image)
+                cv_image = cv.resize(cv_image, (self.video_width, self.video_height))
+                # self.buffer.append(cv_image)
+                self.writer.write(cv_image)
             except cv_bridge.CvBridgeError as e:
                 print(e)
     
@@ -58,23 +60,29 @@ class TaskRecorder(object):
             f.write("\n---------------------\n")
 
     def handle_start_task(self, _):
-        self.current_id = uuid.uuid4()
-        self.buffer = []
-        self.recording = True
-        return TriggerResponse(True, "Start Record" + str(self.current_id))
+        if not self.recording:
+            self.current_id = uuid.uuid4()
+            self.writer = cv.VideoWriter(os.path.join(self.record_folder, self.prefix + str(self.current_id) + ".mp4"),
+                                                cv.VideoWriter_fourcc(*'mp4v'),
+                                                self.frame_rate, 
+                                                (self.video_width, self.video_height))
+            self.buffer = []
+            self.recording = True
+            rospy.sleep(0.1)
+            return TriggerResponse(True, "Start Record" + str(self.current_id))
+        return TriggerResponse(False, "Already Recording")
     
      
 
     def handle_stop_task(self, _):
-        self.recording = False
-        self.writer = cv.VideoWriter(os.path.join(self.record_folder, self.prefix + str(self.current_id) + ".avi"),
-                                             cv.VideoWriter_fourcc(*'MJPG'),
-                                             self.frame_rate, 
-                                             (self.video_width, self.video_height))
-        for frame in self.buffer:
-            self.writer.write(frame)
-        self.writer.release()
-        return TriggerResponse(True, "Stop Record" + str(self.current_id))
+        if self.recording:
+            self.recording = False
+            
+            # for frame in self.buffer:
+                # self.writer.write(frame)
+            self.writer.release()
+            return TriggerResponse(True, "Stop Record" + str(self.current_id))
+        return TriggerResponse(False, "Haven't Start Recording")
 
 
 if __name__ == "__main__":
